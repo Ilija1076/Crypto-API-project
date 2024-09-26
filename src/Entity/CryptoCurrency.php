@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CryptoCurrencyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CryptoCurrencyRepository::class)
@@ -14,54 +15,63 @@ class CryptoCurrency
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("crypto_currency") // Add this line
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("crypto_currency") // Add this line
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("crypto_currency") // Add this line
      */
     private $symbol;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("crypto_currency") // Add this line
      */
     private $currentPrice;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("crypto_currency") // Add this line
      */
     private $totalVolume;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("crypto_currency") // Add this line
      */
     private $ath;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("crypto_currency") // Add this line
      */
     private $athDate;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("crypto_currency") // Add this line
      */
     private $atl;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("crypto_currency") // Add this line
      */
     private $atlDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("crypto_currency") // Add this line
      */
     private $updatedAt;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -75,7 +85,6 @@ class CryptoCurrency
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -87,7 +96,6 @@ class CryptoCurrency
     public function setSymbol(string $symbol): self
     {
         $this->symbol = $symbol;
-
         return $this;
     }
 
@@ -99,7 +107,6 @@ class CryptoCurrency
     public function setCurrentPrice(float $currentPrice): self
     {
         $this->currentPrice = $currentPrice;
-
         return $this;
     }
 
@@ -111,7 +118,6 @@ class CryptoCurrency
     public function setTotalVolume(float $totalVolume): self
     {
         $this->totalVolume = $totalVolume;
-
         return $this;
     }
 
@@ -123,7 +129,6 @@ class CryptoCurrency
     public function setAth(float $ath): self
     {
         $this->ath = $ath;
-
         return $this;
     }
 
@@ -135,7 +140,6 @@ class CryptoCurrency
     public function setAthDate(\DateTimeInterface $athDate): self
     {
         $this->athDate = $athDate;
-
         return $this;
     }
 
@@ -147,7 +151,6 @@ class CryptoCurrency
     public function setAtl(float $atl): self
     {
         $this->atl = $atl;
-
         return $this;
     }
 
@@ -159,7 +162,6 @@ class CryptoCurrency
     public function setAtlDate(\DateTimeInterface $atlDate): self
     {
         $this->atlDate = $atlDate;
-
         return $this;
     }
 
@@ -171,7 +173,6 @@ class CryptoCurrency
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 }

@@ -1,3 +1,6 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+#crypto_currency:
+#  resource: '../src/Controller/CryptoCurrencyController.php'
+#  type: annotation
