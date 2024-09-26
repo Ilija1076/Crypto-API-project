@@ -101,6 +101,31 @@ class CryptoCurrencyController extends AbstractController
 
         return JsonResponse::fromJsonString($data, 200);
     }
+    //API for comparing two cryptocurrencies by their symbols
+    /**
+     * @Route("/api/crypto-currency/compare", name="crypto_currency_compare", methods={"GET"})
+     */
+    public function compareCryptocurrencies(Request $request): JsonResponse
+    {
+        // Get symbols from the query parameters
+        $symbol1 = $request->query->get('symbol1');
+        $symbol2 = $request->query->get('symbol2');
+
+        $crypto1 = $this->em->getRepository(CryptoCurrency::class)->findOneBy(['symbol' => $symbol1]);
+        $crypto2 = $this->em->getRepository(CryptoCurrency::class)->findOneBy(['symbol' => $symbol2]);
+
+        if (!$crypto1 || !$crypto2) {
+            return new JsonResponse(['error' => 'One or both cryptocurrencies not found'], 404);
+        }
+
+        $data = [
+            'currency1' => $this->serializer->serialize($crypto1, 'json', ['groups' => ['crypto_currency']]),
+            'currency2' => $this->serializer->serialize($crypto2, 'json', ['groups' => ['crypto_currency']]),
+        ];
+
+        return JsonResponse::fromJsonString(json_encode($data), 200);
+    }
+
     //API for getting the cryptocurrency by symbol
     /**
      * @Route("/api/crypto-currency/{symbol}", name="crypto_currency_by_symbol", methods={"GET"})
