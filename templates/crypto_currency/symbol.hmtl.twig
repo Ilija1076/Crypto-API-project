@@ -17,7 +17,6 @@
         </tr>
         </thead>
         <tbody>
-        {% for crypto in cryptos %}
             <tr>
                 <td>{{ crypto.name }}</td>
                 <td>{{ crypto.symbol }}</td>
@@ -27,7 +26,6 @@
                 <td>{{ crypto.athDate|date('Y-m-d H:i:s') }}</td>
 
             </tr>
-        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

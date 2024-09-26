@@ -149,17 +149,26 @@ class CryptoCurrencyController extends AbstractController
     /**
      * @Route("/api/crypto-currency/{symbol}", name="crypto_currency_by_symbol", methods={"GET"})
      */
-    public function getBySymbol(string $symbol): JsonResponse
+    public function getBySymbol(string $symbol, Request $request): Response
     {
         $crypto = $this->em->getRepository(CryptoCurrency::class)->findOneBy(['symbol' => $symbol]);
-        // If the symbol doesn't exist return error
+
+
         if (!$crypto) {
-            return new JsonResponse(['error' => 'Cryptocurrency not found'], 404);
+            return new JsonResponse(['error' => 'Cryptocurrency not found'], Response::HTTP_NOT_FOUND);
         }
 
         $data = $this->serializer->serialize($crypto, 'json', ['groups' => ['crypto_currency']]);
 
-        return JsonResponse::fromJsonString($data, 200);
+
+        if ($request->headers->get('Accept') === 'application/json') {
+            return JsonResponse::fromJsonString($data, Response::HTTP_OK);
+        }
+
+
+        return $this->render('crypto_currency/symbol.html.twig', [
+            'crypto' => $crypto,
+        ]);
     }
 
 }

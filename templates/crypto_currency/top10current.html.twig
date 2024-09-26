@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Top 10 Cryptocurrencies by Current Price{% endblock %}
+
+{% block body %}
+    <h1>Top 10 Cryptocurrencies by Current Price</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Symbol</th>
+            <th>Current Price</th>
+            <th>All-Time High</th>
+            <th>All-Time High Date</th>
+            <th>All-Time Low</th>
+            <th>All-Time Low Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for crypto in cryptos %}
+            <tr>
+                <td>{{ crypto.name }}</td>
+                <td>{{ crypto.symbol }}</td>
+                <td>{{ crypto.currentPrice }}</td>
+                <td>{{ crypto.ath }}</td>
+                <td>{{ crypto.athDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ crypto.atl }}</td>
+                <td>{{ crypto.atlDate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

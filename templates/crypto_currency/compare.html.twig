@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Compare Two Cryptocurrencies{% endblock %}
+
+{% block body %}
+    <h1>Compare Two Cryptocurrencies</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>CryptoCurrency</th>
+            <th>{{ currency1.name }} ({{ currency1.symbol }})</th>
+            <th>{{ currency2.name }} ({{ currency2.symbol }})</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Current Price</td>
+            <td>{{ currency1.currentPrice }}</td>
+            <td>{{ currency2.currentPrice }}</td>
+        </tr>
+        <tr>
+            <td>Total Volume</td>
+            <td>{{ currency1.totalVolume }}</td>
+            <td>{{ currency2.totalVolume }}</td>
+        </tr>
+        <tr>
+            <td>All-Time High</td>
+            <td>{{ currency1.ath }}</td>
+            <td>{{ currency2.ath }}</td>
+        </tr>
+        <tr>
+            <td>All-Time High Date</td>
+            <td>{{ currency1.athDate|date('Y-m-d H:i:s') }}</td>
+            <td>{{ currency2.athDate|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <td>All-Time Low</td>
+            <td>{{ currency1.atl }}</td>
+            <td>{{ currency2.atl }}</td>
+        </tr>
+        <tr>
+            <td>All-Time Low Date</td>
+            <td>{{ currency1.atlDate|date('Y-m-d H:i:s') }}</td>
+            <td>{{ currency2.atlDate|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <td>Last Updated</td>
+            <td>{{ currency1.updatedAt|date('Y-m-d H:i:s') }}</td>
+            <td>{{ currency2.updatedAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}
