@@ -18,7 +18,11 @@
             {% for crypto in cryptos %}
                 <tr>
                     <td>{{ crypto.name }}</td>
-                    <td>{{ crypto.symbol }}</td>
+                    <td>
+                        <a href="{{ path('crypto_currency_by_symbol', { 'symbol': crypto.symbol }) }}">
+                            {{ crypto.symbol }}
+                        </a>
+                    </td>
                     <td>{{ crypto.currentPrice }}</td>
                     <td>{{ crypto.totalVolume }}</td>
                 </tr>

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Selected Cryptocurrency{% endblock %}
+
+{% block body %}
+    <h1>Information on {{ crypto.name }}</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Symbol</th>
+            <th>Current Price</th>
+            <th>Total Volume</th>
+            <th>All-Time High</th>
+            <th>All-Time High Date</th>
+            <th>All-Time Low</th>
+            <th>All-Time Low Date</th>
+            <th>Updated Last Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ crypto.name }}</td>
+            <td>{{ crypto.symbol }}</td>
+            <td>{{ crypto.currentPrice }}</td>
+            <td>{{ crypto.totalVolume }}</td>
+            <td>{{ crypto.ath }}</td>
+            <td>{{ crypto.athDate|date('Y-m-d H:i:s') }}</td>
+            <td>{{  crypto.atl }}</td>
+            <td>{{ crypto.atlDate|date('Y-m-d H:i:s') }}</td>
+            <td>{{ crypto.updatedAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}
