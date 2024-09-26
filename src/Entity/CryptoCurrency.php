@@ -15,61 +15,61 @@ class CryptoCurrency
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $symbol;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $currentPrice;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $totalVolume;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $ath;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $athDate;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $atl;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $atlDate;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("crypto_currency") // Add this line
+     * @Groups("crypto_currency")
      */
     private $updatedAt;
     public function getId(): ?int
