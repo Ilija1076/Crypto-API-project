@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -28,68 +29,69 @@ class CryptoCurrencyController extends AbstractController
     /**
      * @Route("/api/crypto-currency", name="crypto_currency_by_price", methods={"GET"})
      */
-    public function getByPrice(Request $request): JsonResponse
+    public function getByPrice(Request $request): Response
     {
-        // Get the min and max parameters from the query string
+        // Get the min and max prices from the query parameters
         $minPrice = $request->query->get('min');
         $maxPrice = $request->query->get('max');
 
-        // Base query builder
         $queryBuilder = $this->em->getRepository(CryptoCurrency::class)->createQueryBuilder('c');
 
-        // If both min and max are provided, use both conditions
-        if ($minPrice !== null && $maxPrice !== null) {
-            $queryBuilder->where('c.currentPrice > :minPrice')
-                ->andWhere('c.currentPrice < :maxPrice')
-                ->setParameter('minPrice', $minPrice)
-                ->setParameter('maxPrice', $maxPrice);
-        }
-        // If only min is provided
-        elseif ($minPrice !== null) {
-            $queryBuilder->where('c.currentPrice > :minPrice')
+        // check if either one has a value and isn't empty string
+        if ($minPrice !== null && $minPrice !== '') {
+            $queryBuilder->andWhere('c.currentPrice >= :minPrice')
                 ->setParameter('minPrice', $minPrice);
         }
-        // If only max is provided
-        elseif ($maxPrice !== null) {
-            $queryBuilder->where('c.currentPrice < :maxPrice')
+
+        if ($maxPrice !== null && $maxPrice !== '') {
+            $queryBuilder->andWhere('c.currentPrice <= :maxPrice')
                 ->setParameter('maxPrice', $maxPrice);
         }
 
-        // Execute the query and get results
         $cryptos = $queryBuilder->getQuery()->getResult();
 
-        // Serialize the data to JSON
-        $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
 
-        return JsonResponse::fromJsonString($data, 200);
+        if ($request->headers->get('Content-Type') === 'application/json') {
+            $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
+            return JsonResponse::fromJsonString($data, 200);
+        }
+
+
+        return $this->render('crypto_currency/index.html.twig', [
+            'cryptos' => $cryptos,
+        ]);
     }
 
-    //API for getting the current top 10 cryptocurrencies by current_price
+    //API showing top 10 cryptocurrencies by current price
     /**
      * @Route("/api/crypto-currency/top-10-current", name="crypto_currency_top_10_current_price", methods={"GET"})
      */
-    public function getTop10ByCurrentPrice(): JsonResponse
+    public function getTop10ByCurrentPrice(Request $request): Response
     {
-
         $cryptos = $this->em->getRepository(CryptoCurrency::class)->createQueryBuilder('c')
-            ->orderBy('c.currentPrice', 'DESC') // Sorting by highest price
-            ->setMaxResults(10) // Limiting to top 10
+            ->orderBy('c.currentPrice', 'DESC')
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
 
+        //check if JSON format
+        if ($request->headers->get('Content-Type') === 'application/json') {
+            $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
+            return JsonResponse::fromJsonString($data, 200);
+        }
 
-        $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
 
-        return JsonResponse::fromJsonString($data, 200);
+        return $this->render('crypto_currency/top10current.html.twig', [
+            'cryptos' => $cryptos,
+        ]);
     }
 
-    //API for getting the top 10 all time high cryptocurrencies
+    //API showing top 10 all time high cryptocurrencies
     /**
      * @Route("/api/crypto-currency/top-10-ath", name="crypto_currency_top_10_ath", methods={"GET"})
      */
-    public function getTop10ByATH(): JsonResponse
+    public function getTop10ByATH(Request $request): Response
     {
-        // Fetch top 10 cryptocurrencies sorted by all-time high (ath)
         $cryptos = $this->em->getRepository(CryptoCurrency::class)->createQueryBuilder('c')
             ->orderBy('c.ath', 'DESC') // Sorting by highest all-time high price
             ->setMaxResults(10) // Limiting to top 10
@@ -97,17 +99,24 @@ class CryptoCurrencyController extends AbstractController
             ->getResult();
 
 
-        $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
+        if ($request->headers->get('Content-Type') === 'application/json') {
+            $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
+            return JsonResponse::fromJsonString($data, 200);
+        }
 
-        return JsonResponse::fromJsonString($data, 200);
+
+        return $this->render('crypto_currency/top10ath.html.twig', [
+            'cryptos' => $cryptos,
+        ]);
     }
+
     //API for comparing two cryptocurrencies by their symbols
     /**
      * @Route("/api/crypto-currency/compare", name="crypto_currency_compare", methods={"GET"})
      */
-    public function compareCryptocurrencies(Request $request): JsonResponse
+    public function compareCryptocurrencies(Request $request): Response
     {
-        // Get symbols from the query parameters
+
         $symbol1 = $request->query->get('symbol1');
         $symbol2 = $request->query->get('symbol2');
 
@@ -118,12 +127,22 @@ class CryptoCurrencyController extends AbstractController
             return new JsonResponse(['error' => 'One or both cryptocurrencies not found'], 404);
         }
 
+        // Prepare data for both cryptocurrencies
         $data = [
             'currency1' => $this->serializer->serialize($crypto1, 'json', ['groups' => ['crypto_currency']]),
             'currency2' => $this->serializer->serialize($crypto2, 'json', ['groups' => ['crypto_currency']]),
         ];
 
-        return JsonResponse::fromJsonString(json_encode($data), 200);
+
+        if ($request->headers->get('Content-Type') === 'application/json') {
+            return JsonResponse::fromJsonString(json_encode($data), 200);
+        }
+
+
+        return $this->render('crypto_currency/compare.html.twig', [
+            'currency1' => $crypto1,
+            'currency2' => $crypto2,
+        ]);
     }
 
     //API for getting the cryptocurrency by symbol

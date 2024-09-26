@@ -1,20 +1,97 @@
-{% extends 'base.html.twig' %}
+{% extends('base.html.twig') %}
 
-{% block title %}Hello CryptoCurrencyController!{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table {
+            width: 60%;
+            border-collapse: collapse;
+            margin-right: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .forms-container {
+            width: 35%;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Cryptocurrency List</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="container">
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>Current Price</th>
+                <th>Total Volume</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for crypto in cryptos %}
+                <tr>
+                    <td>{{ crypto.name }}</td>
+                    <td>{{ crypto.symbol }}</td>
+                    <td>{{ crypto.currentPrice }}</td>
+                    <td>{{ crypto.totalVolume }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/crypto-project/src/Controller/CryptoCurrencyController.php'|file_link(0) }}">src/Controller/CryptoCurrencyController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/crypto-project/templates/crypto_currency/index.html.twig'|file_link(0) }}">templates/crypto_currency/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <div class="forms-container">
+
+
+
+            <h2>Compare Cryptocurrencies</h2>
+            <form method="get" action="{{ path('crypto_currency_compare') }}">
+                <label for="symbol1">Currency 1:</label>
+                <input type="text" id="symbol1" name="symbol1">
+                <br>
+                <label for="symbol2">Currency 2:</label>
+                <input type="text" id="symbol2" name="symbol2">
+                <br>
+                <button type="submit">Compare</button>
+            </form>
+
+            <h2>Filter by Price</h2>
+            <form method="get" action="{{ path('crypto_currency_by_price') }}">
+                <label for="minPrice">Min Price:</label>
+                <input type="number" id="minPrice" name="min">
+                <br>
+                <label for="maxPrice">Max Price:</label>
+                <input type="number" id="maxPrice" name="max">
+                <br>
+                <button type="submit">Filter</button>
+            </form>
+
+            <h2>Top 10 Cryptocurrencies</h2>
+            <form method="get" action="{{ path('crypto_currency_top_10_current_price') }}">
+                <button type="submit">View Top 10 by Current Price</button>
+            </form>
+
+            <form method="get" action="{{ path('crypto_currency_top_10_ath') }}">
+                <button type="submit">View Top 10 by All-Time High (ATH)</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
