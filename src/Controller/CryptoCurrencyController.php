@@ -22,22 +22,6 @@ class CryptoCurrencyController extends AbstractController
         $this->serializer = $serializer;
     }
 
-    /**
-     * @Route("/api/crypto-currency/{symbol}", name="crypto_currency_by_symbol", methods={"GET"})
-     */
-    public function getBySymbol(string $symbol): JsonResponse
-    {
-        $crypto = $this->em->getRepository(CryptoCurrency::class)->findOneBy(['symbol' => $symbol]);
-        // If the symbol doesn't exist return error
-        if (!$crypto) {
-            return new JsonResponse(['error' => 'Cryptocurrency not found'], 404);
-        }
-
-        // Serialize the data to JSON
-        $data = $this->serializer->serialize($crypto, 'json', ['groups' => ['crypto_currency']]);
-
-        return JsonResponse::fromJsonString($data, 200);
-    }
     /*since both are using the same url I had to make a function containing both min and max,
     get from the request the right one or both and return the values below or above them */
 
@@ -80,32 +64,26 @@ class CryptoCurrencyController extends AbstractController
         return JsonResponse::fromJsonString($data, 200);
     }
 
+    //API for getting the current top 10 cryptocurrencies by current_price
     /**
      * @Route("/api/crypto-currency/top-10-current", name="crypto_currency_top_10_current_price", methods={"GET"})
      */
     public function getTop10ByCurrentPrice(): JsonResponse
     {
-        // Fetch top 10 cryptocurrencies sorted by current price (highest first)
+
         $cryptos = $this->em->getRepository(CryptoCurrency::class)->createQueryBuilder('c')
             ->orderBy('c.currentPrice', 'DESC') // Sorting by highest price
             ->setMaxResults(10) // Limiting to top 10
             ->getQuery()
             ->getResult();
-        if (empty($cryptos)) {
-            // Return error if no data found
-            return new JsonResponse(['error' => 'No cryptocurrencies found.'], 404);
-        }
-        // Log the fetched data for debugging
-        foreach ($cryptos as $crypto) {
-            // Example: Dump the names and prices to the log
-            error_log('Fetched cryptocurrency: ' . $crypto->getName() . ', Price: ' . $crypto->getCurrentPrice());
-        }
-        // Serialize the data to JSON
+
+
         $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
 
         return JsonResponse::fromJsonString($data, 200);
     }
 
+    //API for getting the top 10 all time high cryptocurrencies
     /**
      * @Route("/api/crypto-currency/top-10-ath", name="crypto_currency_top_10_ath", methods={"GET"})
      */
@@ -118,8 +96,24 @@ class CryptoCurrencyController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // Serialize the data to JSON
+
         $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
+
+        return JsonResponse::fromJsonString($data, 200);
+    }
+    //API for getting the cryptocurrency by symbol
+    /**
+     * @Route("/api/crypto-currency/{symbol}", name="crypto_currency_by_symbol", methods={"GET"})
+     */
+    public function getBySymbol(string $symbol): JsonResponse
+    {
+        $crypto = $this->em->getRepository(CryptoCurrency::class)->findOneBy(['symbol' => $symbol]);
+        // If the symbol doesn't exist return error
+        if (!$crypto) {
+            return new JsonResponse(['error' => 'Cryptocurrency not found'], 404);
+        }
+
+        $data = $this->serializer->serialize($crypto, 'json', ['groups' => ['crypto_currency']]);
 
         return JsonResponse::fromJsonString($data, 200);
     }

@@ -49,6 +49,7 @@ class CryptoCurrency
      */
     private $ath;
 
+
     /**
      * @ORM\Column(type="datetime")
      * @Groups("crypto_currency")
