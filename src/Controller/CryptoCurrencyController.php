@@ -38,21 +38,41 @@ class CryptoCurrencyController extends AbstractController
 
         return JsonResponse::fromJsonString($data, 200);
     }
+    /*since both are using the same url I had to make a function containing both min and max,
+    get from the request the right one and return the values below or above them */
 
     /**
-     * @Route("/api/crypto-currency", name="crypto_currency_by_min_price", methods={"GET"})
+     * @Route("/api/crypto-currency", name="crypto_currency_by_price", methods={"GET"})
      */
-    public function getByMinPrice(Request $request): JsonResponse
+    public function getByPrice(Request $request): JsonResponse
     {
-        // Get the min parameter from the query string
-        $minPrice = $request->query->get('min', 0);
+        // Get the min and max parameters from the query string
+        $minPrice = $request->query->get('min');
+        $maxPrice = $request->query->get('max');
 
-        // Find cryptocurrencies with price greater than minPrice
-        $cryptos = $this->em->getRepository(CryptoCurrency::class)->createQueryBuilder('c')
-            ->where('c.currentPrice > :minPrice')
-            ->setParameter('minPrice', $minPrice)
-            ->getQuery()
-            ->getResult();
+        // Base query builder
+        $queryBuilder = $this->em->getRepository(CryptoCurrency::class)->createQueryBuilder('c');
+
+        // If both min and max are provided, use both conditions
+        if ($minPrice !== null && $maxPrice !== null) {
+            $queryBuilder->where('c.currentPrice > :minPrice')
+                ->andWhere('c.currentPrice < :maxPrice')
+                ->setParameter('minPrice', $minPrice)
+                ->setParameter('maxPrice', $maxPrice);
+        }
+        // If only min is provided
+        elseif ($minPrice !== null) {
+            $queryBuilder->where('c.currentPrice > :minPrice')
+                ->setParameter('minPrice', $minPrice);
+        }
+        // If only max is provided
+        elseif ($maxPrice !== null) {
+            $queryBuilder->where('c.currentPrice < :maxPrice')
+                ->setParameter('maxPrice', $maxPrice);
+        }
+
+        // Execute the query and get results
+        $cryptos = $queryBuilder->getQuery()->getResult();
 
         // Serialize the data to JSON
         $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
@@ -61,25 +81,5 @@ class CryptoCurrencyController extends AbstractController
     }
 
 
-    /**
-     * @Route("/api/crypto-currency", name="crypto_currency_by_max_price", methods={"GET"})
-     */
-    public function getByMaxPrice(Request $request): JsonResponse
-    {
-        // Get the max parameter from the query string
-        $maxPrice = $request->query->get('max', PHP_INT_MAX);
-
-        // Find cryptocurrencies with price less than maxPrice
-        $cryptos = $this->em->getRepository(CryptoCurrency::class)->createQueryBuilder('c')
-            ->where('c.currentPrice < :maxPrice')
-            ->setParameter('maxPrice', $maxPrice)
-            ->getQuery()
-            ->getResult();
-
-        // Serialize the data to JSON
-        $data = $this->serializer->serialize($cryptos, 'json', ['groups' => ['crypto_currency']]);
-
-        return JsonResponse::fromJsonString($data, 200);
-    }
 
 }
