@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CryptoCurrencyRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -133,12 +134,12 @@ class CryptoCurrency
         return $this;
     }
 
-    public function getAthDate(): ?\DateTimeInterface
+    public function getAthDate(): ?DateTimeInterface
     {
         return $this->athDate;
     }
 
-    public function setAthDate(\DateTimeInterface $athDate): self
+    public function setAthDate(DateTimeInterface $athDate): self
     {
         $this->athDate = $athDate;
         return $this;
@@ -155,23 +156,23 @@ class CryptoCurrency
         return $this;
     }
 
-    public function getAtlDate(): ?\DateTimeInterface
+    public function getAtlDate(): ?DateTimeInterface
     {
         return $this->atlDate;
     }
 
-    public function setAtlDate(\DateTimeInterface $atlDate): self
+    public function setAtlDate(DateTimeInterface $atlDate): self
     {
         $this->atlDate = $atlDate;
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;
