@@ -19,15 +19,23 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+#makes problem with json returning format
+   # Symfony\Component\Serializer\Normalizer\ObjectNormalizer:
+  #      class: Symfony\Component\Serializer\Normalizer\ObjectNormalizer
+   #     public: false
+   #     tags:
+  #           - { name: 'serializer.normalizer' }
 
-    Symfony\Component\Serializer\Normalizer\ObjectNormalizer:
-        class: Symfony\Component\Serializer\Normalizer\ObjectNormalizer
+  #  Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer:
+   #     class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+  #      public: false
+  #      tags:
+ #           - { name: 'serializer.normalizer' }
+    Symfony\Component\Serializer\Normalizer\DateTimeNormalizer:
+        class: Symfony\Component\Serializer\Normalizer\DateTimeNormalizer
         public: false
-        tags:
-             - { name: 'serializer.normalizer' }
-
-    Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer:
-        class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
-        public: false
+        arguments:
+            $defaultContext:
+                datetime_format: 'Y-m-d H:i:s' # Example format
         tags:
             - { name: 'serializer.normalizer' }
