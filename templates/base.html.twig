@@ -1,46 +1,16 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel = "stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
-        {% block stylesheets %}
-            <style>
-                .container {
-                    display: flex;
-                    justify-content: space-between;
-                }
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
 
-                table {
-                    width: 60%;
-                    border-collapse: collapse;
-                    margin-right: 20px;
-                }
-
-                table, th, td {
-                    border: 1px solid black;
-                }
-
-                th, td {
-                    padding: 10px;
-                    text-align: left;
-                }
-
-                form {
-                    margin-top: 20px;
-                }
-
-                .forms-container {
-                    width: 35%;
-                }
-            </style>
-        {% endblock %}
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 </html>

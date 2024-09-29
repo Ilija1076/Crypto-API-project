@@ -1,7 +1,12 @@
-
 services:
-###> doctrine/doctrine-bundle ###
-  database:
+  app:
     ports:
-      - "5432"
-###< doctrine/doctrine-bundle ###
+      - "9000:9000"
+    environment:
+      APP_ENV: local
+
+  webserver:
+    ports:
+      - "8080:80"
+
+

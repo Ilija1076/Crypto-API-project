@@ -58,20 +58,18 @@ class FetchCryptoInfoCommand extends Command
                 $crypto->setCurrentPrice($value['current_price']);
                 $crypto->setTotalVolume($value['total_volume']);
                 $crypto->setAth($value['ath']);
-                // Attempt to set ATH date field and catch exceptions
+                // Attempt to set date fields
                 try {
                     $crypto->setAthDate(new DateTime($value['ath_date']));
                 } catch (Exception $e) {
                     $output->writeln('Invalid ATH date for ' . $value['name'] . ': ' . $e->getMessage());
                 }
                 $crypto->setAtl($value['atl']);
-                // Attempt to set ATL date field and catch exceptions
                 try {
                     $crypto->setAtlDate(new DateTime($value['atl_date']));
                 } catch (Exception $e) {
                     $output->writeln('Invalid ATL date for ' . $value['name'] . ': ' . $e->getMessage());
                 }
-                // Attempt to set updated date field and catch exceptions
                 try {
                     $crypto->setUpdatedAt(new DateTime($value['last_updated']));
                 } catch (Exception $e) {
