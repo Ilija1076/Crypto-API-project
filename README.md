@@ -26,7 +26,7 @@ php bin/console app:fetch-crypto-data
 And you have to change the .env file database url to match your localhost address in case you are using some local hosting 
 for example DATABASE_URL="mysql://root:password@127.0.0.1:3306/cryptodb"
 
-###With Docker
+### With Docker
 Prerequisites
 Ensure you have the following installed on your machine:
 
